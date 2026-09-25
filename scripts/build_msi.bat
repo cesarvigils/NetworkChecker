@@ -1,7 +1,7 @@
 @echo off
 setlocal
 REM Builds a true Windows Installer .msi with the WiX Toolset (v3.11+).
-REM Requires dist\NetworkChecker.exe and dist\NetworkChecker-CLI.exe to
+REM Requires dist\NetworkChecker-GUI.exe and dist\networkchecker.exe to
 REM already exist (run scripts\build_exe.bat first) and candle.exe /
 REM light.exe to be on PATH.
 REM
@@ -9,8 +9,8 @@ REM Usage:  scripts\build_msi.bat
 
 cd /d "%~dp0.."
 
-if not exist "dist\NetworkChecker.exe" (
-    echo dist\NetworkChecker.exe not found. Run scripts\build_exe.bat first.
+if not exist "dist\NetworkChecker-GUI.exe" (
+    echo dist\NetworkChecker-GUI.exe not found. Run scripts\build_exe.bat first.
     exit /b 1
 )
 

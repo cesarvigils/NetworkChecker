@@ -1,4 +1,4 @@
-"""Entry point PyInstaller bundles as NetworkChecker.exe (windowed GUI)."""
+"""Entry point PyInstaller bundles as NetworkChecker-GUI.exe (windowed GUI)."""
 
 import sys
 from pathlib import Path

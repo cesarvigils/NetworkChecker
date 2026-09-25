@@ -84,3 +84,30 @@ def test_version_flag(capsys):
         assert exc.code == 0
     out = capsys.readouterr().out
     assert "networkchecker" in out
+
+
+def test_no_arguments_prints_help_instead_of_erroring(capsys):
+    with patch("networkchecker.cli._launched_by_double_click", return_value=False):
+        rc = cli.main([])
+
+    assert rc == 0
+    assert "usage: networkchecker" in capsys.readouterr().out
+
+
+def test_no_arguments_waits_for_enter_when_double_clicked(capsys):
+    with patch("networkchecker.cli._launched_by_double_click", return_value=True), \
+            patch("builtins.input", return_value="") as fake_input:
+        rc = cli.main([])
+
+    assert rc == 0
+    fake_input.assert_called_once()
+    assert "open a terminal" in capsys.readouterr().out
+
+
+def test_ip_command_shows_location_and_coordinates(capsys):
+    with patch("networkchecker.cli.get_ip_info", return_value=_fake_ip_info_ok()):
+        cli.main(["ip"])
+
+    out = capsys.readouterr().out
+    assert "Springfield, IL, USA" in out
+    assert "Coordinates    : 1.0, 2.0" in out

@@ -186,7 +186,7 @@ class NetworkCheckerApp(tk.Tk):
                     self._write(f"  {info.error}")
                 else:
                     self._write(f"  Public IP: {info.public_ip}")
-                    self._write(f"  Location : {info.city}, {info.region}, {info.country}")
+                    self._write(f"  Location : {info.location}")
                     self._write(f"  ISP/Org  : {info.isp} / {info.org}")
                 self._write("")
 
@@ -273,7 +273,7 @@ class NetworkCheckerApp(tk.Tk):
         else:
             ip = report.ip_info
             self._write(f"  Public IP: {ip.public_ip}")
-            self._write(f"  Location : {ip.city}, {ip.region}, {ip.country}")
+            self._write(f"  Location : {ip.location}")
             self._write(f"  ISP/Org  : {ip.isp} / {ip.org}")
 
         self._write("\n[Carrier / ISP]")

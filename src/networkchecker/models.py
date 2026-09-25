@@ -63,6 +63,12 @@ class IPInfo:
     source: Optional[str]
     error: Optional[str] = None
 
+    @property
+    def location(self) -> str:
+        """"City, Region, Country", skipping any parts the provider didn't return."""
+        parts = [p for p in (self.city, self.region, self.country) if p]
+        return ", ".join(parts) if parts else "unknown"
+
 
 @dataclass
 class SpeedResult:

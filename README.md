@@ -86,8 +86,12 @@ separately with `sudo apt install python3-tk`).
 
 ### Packaged as .exe / .msi
 
-Once built (see [documents/PACKAGING.md](documents/PACKAGING.md)), end
-users just run the installer — no Python required on their machine.
+Download `NetworkChecker-Setup.exe` or `NetworkChecker.msi` from the
+repository's **Releases** page (or build them yourself — see
+[documents/PACKAGING.md](documents/PACKAGING.md)). No Python is required on
+the user's machine. The installer adds a "NetworkChecker" Start Menu
+shortcut for the GUI and puts the `networkchecker` command on your `PATH`,
+so every command above works from a new cmd/PowerShell window.
 
 ## Project layout
 

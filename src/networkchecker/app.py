@@ -48,7 +48,7 @@ def run_full_report(include_speed_test: bool = True, progress_callback: Progress
 
     notify("Looking up ISP / carrier info...")
     connection_type = detect_connection_type()
-    carrier = get_carrier_info(connection_type=connection_type)
+    carrier = get_carrier_info(connection_type=connection_type, ip_info=ip_info)
 
     speed = None
     if include_speed_test:

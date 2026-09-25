@@ -1,6 +1,6 @@
 ; Inno Setup script -> builds a Windows installer EXE (Setup.exe) for
 ; NetworkChecker. Run on Windows after PyInstaller has produced
-; dist\NetworkChecker.exe and dist\NetworkChecker-CLI.exe:
+; dist\NetworkChecker-GUI.exe and dist\networkchecker.exe:
 ;
 ;   iscc packaging\inno\NetworkChecker.iss
 ;
@@ -10,8 +10,8 @@
 #define MyAppName "NetworkChecker"
 #define MyAppVersion "1.0.0"
 #define MyAppPublisher "NetworkChecker Project"
-#define MyAppExeName "NetworkChecker.exe"
-#define MyCliExeName "NetworkChecker-CLI.exe"
+#define MyAppExeName "NetworkChecker-GUI.exe"
+#define MyCliExeName "networkchecker.exe"
 
 [Setup]
 AppId={{B6E2B7B0-9D9E-4A9E-9A9C-4E1B2C7C9B10}
@@ -36,7 +36,13 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "Create a &desktop icon"; GroupDescription: "Additional icons:"
-Name: "addtopath"; Description: "Add the command-line tool ({#MyCliExeName}) to PATH"; GroupDescription: "Additional icons:"; Flags: unchecked
+Name: "addtopath"; Description: "Add the command-line tool (networkchecker) to PATH"; GroupDescription: "Command line:"
+
+[InstallDelete]
+; Executable names used by earlier builds; remove them on upgrade so a stale GUI exe
+; can't shadow the "networkchecker" command.
+Type: files; Name: "{app}\NetworkChecker-CLI.exe"
+Type: files; Name: "{app}\NetworkChecker.exe"
 
 [Files]
 Source: "..\..\dist\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
@@ -53,7 +59,7 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#MyAppName}}"; Flags: nowait postinstall skipifsilent
 
 ; Optionally add the install directory to the user PATH so
-; "NetworkChecker-CLI" is callable from any terminal.
+; "networkchecker" is callable from any terminal.
 [Registry]
 Root: HKCU; Subkey: "Environment"; ValueType: expandsz; ValueName: "Path"; \
     ValueData: "{olddata};{app}"; Tasks: addtopath; Check: NeedsAddPath(ExpandConstant('{app}'))

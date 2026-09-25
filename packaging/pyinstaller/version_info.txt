@@ -24,7 +24,7 @@ VSVersionInfo(
             StringStruct(u'FileVersion', u'1.0.0.0'),
             StringStruct(u'InternalName', u'NetworkChecker'),
             StringStruct(u'LegalCopyright', u'Free to use. Provided as-is, without warranty.'),
-            StringStruct(u'OriginalFilename', u'NetworkChecker.exe'),
+            StringStruct(u'OriginalFilename', u'NetworkChecker-GUI.exe'),
             StringStruct(u'ProductName', u'NetworkChecker'),
             StringStruct(u'ProductVersion', u'1.0.0.0'),
           ],

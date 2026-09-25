@@ -8,6 +8,9 @@ on:
     branches: [main]
   workflow_dispatch: {}
 
+permissions:
+  contents: read
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -22,8 +25,21 @@ jobs:
   build-windows:
     needs: test
     runs-on: windows-latest
+    permissions:
+      contents: write  # needed to create the GitHub Release on tag pushes
     steps:
       - uses: actions/checkout@v4
+
+      - name: Check tag matches app version
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: bash
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          version=$(sed -n 's/^version = "\(.*\)"/\1/p' pyproject.toml)
+          if [ "$tag" != "$version" ]; then
+            echo "::error::Tag v$tag does not match pyproject.toml version $version. Bump the version (see documents/PACKAGING.md) before tagging."
+            exit 1
+          fi
 
       - uses: actions/setup-python@v5
         with:
@@ -44,15 +60,17 @@ jobs:
         run: pyinstaller --noconfirm --clean packaging/pyinstaller/NetworkCheckerCLI.spec
 
       - name: Smoke-test the CLI exe
-        run: dist\NetworkChecker-CLI.exe --version
+        run: |
+          dist\networkchecker.exe --version
+          dist\networkchecker.exe --help
 
       - name: Upload raw executables
         uses: actions/upload-artifact@v4
         with:
           name: NetworkChecker-exe
           path: |
-            dist/NetworkChecker.exe
-            dist/NetworkChecker-CLI.exe
+            dist/NetworkChecker-GUI.exe
+            dist/networkchecker.exe
 
       - name: Install Inno Setup
         run: choco install innosetup --no-progress -y
@@ -82,3 +100,15 @@ jobs:
         with:
           name: NetworkChecker-msi
           path: dist/NetworkChecker.msi
+
+      - name: Publish GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: NetworkChecker ${{ github.ref_name }}
+          generate_release_notes: true
+          files: |
+            packaging/inno/Output/NetworkChecker-Setup.exe
+            dist/NetworkChecker.msi
+            dist/NetworkChecker-GUI.exe
+            dist/networkchecker.exe

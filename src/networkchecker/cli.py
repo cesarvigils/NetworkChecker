@@ -86,7 +86,9 @@ def _print_ip(info) -> None:
         print(f"IP check: {info.error}")
         return
     print(f"Public IP      : {info.public_ip}")
-    print(f"Location       : {info.city}, {info.region}, {info.country}")
+    print(f"Location       : {info.location}")
+    if info.latitude is not None and info.longitude is not None:
+        print(f"Coordinates    : {info.latitude}, {info.longitude}")
     print(f"ISP / Org      : {info.isp} / {info.org}")
     print(f"ASN            : {info.asn}")
     print(f"Source         : {info.source}")
@@ -316,8 +318,35 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _launched_by_double_click() -> bool:
+    """True if this process owns its console window (e.g. the .exe was
+    double-clicked in Explorer), meaning the window closes as soon as we exit.
+    """
+    if sys.platform != "win32":
+        return False
+    try:
+        import ctypes
+
+        process_ids = (ctypes.c_uint32 * 8)()
+        count = ctypes.windll.kernel32.GetConsoleProcessList(process_ids, 8)
+    except Exception:
+        return False
+    # A PyInstaller onefile exe is two processes (bootloader + app) sharing
+    # the console; launched from a terminal, the shell is attached as well.
+    return count <= (2 if getattr(sys, "frozen", False) else 1)
+
+
 def main(argv=None) -> int:
     parser = build_parser()
+    if argv is None:
+        argv = sys.argv[1:]
+    if not argv:
+        parser.print_help()
+        if _launched_by_double_click():
+            print("\nThis is a command-line tool: open a terminal (cmd or PowerShell) "
+                  "and run e.g. 'networkchecker full'.")
+            input("Press Enter to close this window...")
+        return 0
     args = parser.parse_args(argv)
     try:
         return args.func(args)

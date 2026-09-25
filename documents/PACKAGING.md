@@ -10,7 +10,7 @@ the same steps locally on a Windows machine.
 ## Pipeline overview
 
 ```
-Python source  --PyInstaller-->  NetworkChecker.exe + NetworkChecker-CLI.exe
+Python source  --PyInstaller-->  NetworkChecker-GUI.exe + networkchecker.exe
                                          |
                           +--------------+--------------+
                           |                             |
@@ -49,9 +49,15 @@ pyinstaller packaging\pyinstaller\NetworkChecker.spec
 pyinstaller packaging\pyinstaller\NetworkCheckerCLI.spec
 ```
 
-Output: `dist\NetworkChecker.exe` (windowed GUI) and
-`dist\NetworkChecker-CLI.exe` (console app, for scripting and the
+Output: `dist\NetworkChecker-GUI.exe` (windowed GUI) and
+`dist\networkchecker.exe` (console app, for scripting and the
 `scanner watch` long-running mode).
+
+> The console exe is deliberately named plain `networkchecker` so that
+> typing `networkchecker <command>` in a terminal runs it. Windows matches
+> exe names case-insensitively, so the GUI must **not** be called
+> `NetworkChecker.exe` — it would shadow the CLI and silently open a
+> window instead of printing results.
 
 > Both spec files exclude `cryptography`/`OpenSSL` — `requests` only needs
 > the standard library's `ssl` module, and excluding them avoids a known
@@ -70,7 +76,9 @@ iscc packaging\inno\NetworkChecker.iss
 
 Output: `packaging\inno\Output\NetworkChecker-Setup.exe`. This installs
 both executables, creates Start Menu (and optionally Desktop) shortcuts,
-offers to add the CLI to the user's `PATH`, and generates an uninstaller.
+adds the install folder to the user's `PATH` (so `networkchecker` works
+from any new terminal; untick the option to skip it), and generates an
+uninstaller.
 
 ## 3b. Build the `.msi` (WiX Toolset)
 
@@ -93,9 +101,26 @@ shortcuts, and registers a proper uninstall entry in "Apps & Features".
 
 `.github/workflows/build-windows.yml` runs the test suite on every push/PR,
 then — on a `windows-latest` runner — builds both executables, the Inno
-Setup installer, and the MSI, uploading all three as workflow artifacts.
-Push a tag like `v1.0.0` (or just push to `main`) to trigger a build; grab
-the artifacts from the Actions run summary.
+Setup installer, and the MSI, uploading them as workflow artifacts (these
+expire after 90 days).
+
+## 5. Publishing a release
+
+Pushing a version tag publishes a **GitHub Release** with the installers
+attached:
+
+```bash
+git checkout main && git pull
+git tag v1.0.0            # must match [project].version in pyproject.toml
+git push origin v1.0.0
+```
+
+The workflow then builds everything and creates a release named
+`NetworkChecker v1.0.0`, with auto-generated release notes and these
+downloads: `NetworkChecker-Setup.exe`, `NetworkChecker.msi`, and the two
+standalone executables. If the tag doesn't match the version in
+`pyproject.toml`, the build fails before anything is published, so bump
+the version first (see below).
 
 ## Versioning
 
@@ -116,5 +141,5 @@ The version string lives in three places that should be bumped together:
   [futureactions.md](futureactions.md).
 - **GUI window doesn't appear / crashes on launch** — make sure you built
   from `NetworkChecker.spec` (which sets `console=False`); run
-  `dist\NetworkChecker-CLI.exe --help` first to confirm the underlying
+  `dist\networkchecker.exe --help` first to confirm the underlying
   Python code itself is working.

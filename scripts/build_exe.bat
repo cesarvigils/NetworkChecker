@@ -1,6 +1,6 @@
 @echo off
 setlocal enabledelayedexpansion
-REM Builds NetworkChecker.exe (GUI) and NetworkChecker-CLI.exe (console)
+REM Builds NetworkChecker-GUI.exe (GUI) and networkchecker.exe (console)
 REM with PyInstaller, then compiles the Inno Setup installer if "iscc" is
 REM on PATH. Run this from Windows with Python 3.9+ installed.
 REM
@@ -12,10 +12,10 @@ echo === Installing build dependencies ===
 python -m pip install --upgrade pip || goto :error
 python -m pip install -r requirements.txt -r requirements-dev.txt || goto :error
 
-echo === Building NetworkChecker.exe (GUI) ===
+echo === Building NetworkChecker-GUI.exe (GUI) ===
 python -m PyInstaller --noconfirm --clean packaging\pyinstaller\NetworkChecker.spec || goto :error
 
-echo === Building NetworkChecker-CLI.exe (console) ===
+echo === Building networkchecker.exe (console) ===
 python -m PyInstaller --noconfirm --clean packaging\pyinstaller\NetworkCheckerCLI.spec || goto :error
 
 echo === PyInstaller output is in dist\ ===

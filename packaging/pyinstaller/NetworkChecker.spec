@@ -1,10 +1,10 @@
 # -*- mode: python ; coding: utf-8 -*-
-"""PyInstaller spec: NetworkChecker.exe (windowed GUI, onefile).
+"""PyInstaller spec: NetworkChecker-GUI.exe (windowed GUI, onefile).
 
 Build with:
     pyinstaller packaging/pyinstaller/NetworkChecker.spec
 
-Output lands in dist/NetworkChecker.exe. See documents/PACKAGING.md for the
+Output lands in dist/NetworkChecker-GUI.exe. See documents/PACKAGING.md for the
 full build -> Inno Setup / WiX -> installer pipeline.
 """
 
@@ -45,7 +45,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name="NetworkChecker",
+    name="NetworkChecker-GUI",
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,

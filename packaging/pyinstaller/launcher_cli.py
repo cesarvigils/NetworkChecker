@@ -1,4 +1,4 @@
-"""Entry point PyInstaller bundles as NetworkChecker-CLI.exe (console app)."""
+"""Entry point PyInstaller bundles as networkchecker.exe (console app)."""
 
 import sys
 from pathlib import Path

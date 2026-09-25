@@ -3,7 +3,7 @@
   WiX Toolset v3 source file -> builds a true Windows Installer .msi.
 
   Prerequisites (on Windows): PyInstaller has already produced
-  dist\NetworkChecker.exe and dist\NetworkChecker-CLI.exe, and WiX
+  dist\NetworkChecker-GUI.exe and dist\networkchecker.exe, and WiX
   Toolset v3.11+ is installed (candle.exe / light.exe on PATH).
 
   Build (run from the repository root):
@@ -26,7 +26,7 @@
     <MajorUpgrade DowngradeErrorMessage="A newer version of NetworkChecker is already installed." />
     <MediaTemplate EmbedCab="yes" />
 
-    <Icon Id="AppIcon.exe" SourceFile="$(var.SourceDir)\NetworkChecker.exe" />
+    <Icon Id="AppIcon.exe" SourceFile="$(var.SourceDir)\NetworkChecker-GUI.exe" />
     <Property Id="ARPPRODUCTICON" Value="AppIcon.exe" />
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
 
@@ -41,9 +41,9 @@
     </Directory>
 
     <DirectoryRef Id="INSTALLFOLDER">
-      <Component Id="MainExecutables" Guid="393F7E32-53F2-41AF-A624-6963672B62D9">
-        <File Id="NetworkCheckerExe" Source="$(var.SourceDir)\NetworkChecker.exe" KeyPath="yes" />
-        <File Id="NetworkCheckerCliExe" Source="$(var.SourceDir)\NetworkChecker-CLI.exe" />
+      <Component Id="MainExecutables" Guid="8D3C1F6A-4B7E-4E2A-9C1D-6F0B2A5E7C94">
+        <File Id="NetworkCheckerGuiExe" Source="$(var.SourceDir)\NetworkChecker-GUI.exe" KeyPath="yes" />
+        <File Id="NetworkCheckerCliExe" Source="$(var.SourceDir)\networkchecker.exe" />
         <Environment Id="PATH" Name="PATH" Value="[INSTALLFOLDER]" Permanent="no"
                      Part="last" Action="set" System="no" />
       </Component>
@@ -54,7 +54,7 @@
         <Shortcut Id="ApplicationStartMenuShortcut"
                   Name="NetworkChecker"
                   Description="Full Network Checker Interface"
-                  Target="[INSTALLFOLDER]NetworkChecker.exe"
+                  Target="[INSTALLFOLDER]NetworkChecker-GUI.exe"
                   WorkingDirectory="INSTALLFOLDER" />
         <Shortcut Id="UninstallShortcut"
                   Name="Uninstall NetworkChecker"
@@ -72,7 +72,7 @@
         <Shortcut Id="DesktopAppShortcut"
                   Name="NetworkChecker"
                   Description="Full Network Checker Interface"
-                  Target="[INSTALLFOLDER]NetworkChecker.exe"
+                  Target="[INSTALLFOLDER]NetworkChecker-GUI.exe"
                   WorkingDirectory="INSTALLFOLDER" />
         <RegistryValue Root="HKCU" Key="Software\NetworkChecker" Name="desktop_shortcut"
                         Type="integer" Value="1" KeyPath="yes" />

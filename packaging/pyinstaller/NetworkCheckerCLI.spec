@@ -1,12 +1,15 @@
 # -*- mode: python ; coding: utf-8 -*-
-"""PyInstaller spec: NetworkChecker-CLI.exe (console app, onefile).
+"""PyInstaller spec: networkchecker.exe (console app, onefile).
 
 Build with:
     pyinstaller packaging/pyinstaller/NetworkCheckerCLI.spec
 
-Output lands in dist/NetworkChecker-CLI.exe. Bundled alongside the GUI exe
+Output lands in dist/networkchecker.exe. Bundled alongside the GUI exe
 so scripting/automation users (and the "scanner watch" long-running mode)
-have a console entry point too.
+have a console entry point too. It is deliberately named plain
+"networkchecker" so that typing ``networkchecker <command>`` in a terminal
+runs this console exe (Windows matches exe names case-insensitively, so
+the GUI must not be called NetworkChecker.exe, or it would win instead).
 """
 
 import sys
@@ -45,7 +48,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name="NetworkChecker-CLI",
+    name="networkchecker",
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,

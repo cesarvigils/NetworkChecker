@@ -15,7 +15,7 @@ import re
 import subprocess
 from typing import Optional
 
-from ..models import CarrierInfo
+from ..models import CarrierInfo, IPInfo
 from .ip_info import get_ip_info
 
 
@@ -35,9 +35,14 @@ def _windows_mobile_carrier() -> Optional[str]:
     return match.group(1).strip() if match else None
 
 
-def get_carrier_info(connection_type: str = "Unknown") -> CarrierInfo:
-    """Return ISP/ASN info from IP geolocation, plus mobile carrier on Windows."""
-    ip_info = get_ip_info()
+def get_carrier_info(connection_type: str = "Unknown", ip_info: Optional[IPInfo] = None) -> CarrierInfo:
+    """Return ISP/ASN info from IP geolocation, plus mobile carrier on Windows.
+
+    Pass an already-fetched ``ip_info`` to avoid a second lookup (the free
+    geolocation providers rate-limit repeated requests).
+    """
+    if ip_info is None:
+        ip_info = get_ip_info()
 
     mobile_carrier = None
     if platform.system() == "Windows":
